@@ -92,6 +92,12 @@ What is the best strategy to make an optimized table in Big Query if your query 
 ### Answer 
     Partition by tpep_dropoff_datetime and Cluster on VendorID
 
+```sql
+CREATE TABLE yellow_trip.yellow_trip_op
+PARTITION BY DATE(tpep_dropoff_datetime)
+CLUSTER BY VendorID AS
+SELECT * FROM `yellow_trip.yellow_trip_material`;
+```
 
 ## Question 6:
 Write a query to retrieve the distinct VendorIDs between tpep_dropoff_datetime
@@ -106,6 +112,21 @@ Choose the answer which most closely matches.</br>
 - 5.87 MB for non-partitioned table and 0 MB for the partitioned table
 - 310.31 MB for non-partitioned table and 285.64 MB for the partitioned table
 
+### Answer: 
+    310.24 MB for non-partitioned table and 26.84 MB for the partitioned table
+```sql
+SELECT 
+ COUNT(DISTINCT VendorID)
+ from `yellow_trip.yellow_trip_material`
+WHERE DATE(tpep_dropoff_datetime) BETWEEN '2024-03-01' AND '2024-03-15'
+;
+
+SELECT 
+ COUNT(DISTINCT VendorID)
+ from `yellow_trip.yellow_trip_op`
+WHERE DATE(tpep_dropoff_datetime) BETWEEN '2024-03-01' AND '2024-03-15'
+;
+```
 
 ## Question 7: 
 Where is the data stored in the External Table you created?
